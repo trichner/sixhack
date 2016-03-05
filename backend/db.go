@@ -3,9 +3,11 @@ package main
 import (
 	"log"
 	"github.com/boltdb/bolt"
+	"github.com/trichner/sixhack/backend/hash"
 )
 
 const bucket = "Wallets"
+
 var db *bolt.DB
 
 func OpenDB() {
@@ -30,7 +32,7 @@ func OpenDB() {
 
 func CreateWallet(id string, coins int) (Wallet, error) {
 
-	chain, err := GenerateHashChain(coins)
+	chain, err := hash.GenerateHashChain(coins)
 	if err != nil {
 		log.Fatal(err)
 		return Wallet{}, err
@@ -75,7 +77,7 @@ func GetWalletCount(id string) (int, error) {
 	    v := b.Get([]byte(id))
 	    var err error
 	    wallet, err := WalletDecode(v)
-	    count = CountChain(HashChain{wallet.Seed,wallet.Tail})
+	    count = hash.CountChain(hash.HashChain{wallet.Seed,wallet.Tail})
 	    return err
 	})
 	return count, err
@@ -111,7 +113,7 @@ func RedeemCoins(id string, coin string) (int) {
 	    if err!=nil {
 	    	return err
 	    }
-	    coins = CountChain(HashChain{coin, wallet.Tail})
+	    coins = hash.CountChain(hash.HashChain{coin, wallet.Tail})
 	    if coins>0 {
 	    	wallet.Tail = coin
 	    	w, err := wallet.encode()
