@@ -1,0 +1,6 @@
+Host sixhack.k42.ch
+	Hostname k42.ch
+	User ubuntu
+	Port 47806
+	IdentityFile ~/.ssh/id_sixhack.k42.ch
+	IdentitiesOnly yes

@@ -6,12 +6,17 @@
   "version": "0.1",
 
   "browser_action": {
-    "default_icon": "res/coffee.png",
+    "default_icon": "res/coffee_closed.png",
     "default_popup": "popup.html"
   },
   "permissions": [
     "activeTab",
     "https://api.qrserver.com/v1/",
-    "storage"
-  ]
+    "storage",
+    "alarms"
+  ],
+  "background": {
+    "scripts": ["pollApi.js"],
+    "persistent": false
+  }
 }
