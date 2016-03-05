@@ -749,9 +749,48 @@ ecomUrl: 'https://subscribe.wired.com/api/circ/xml/Transaction',
 <!-- PayWall start -->
 <script type="text/javascript">
 
+var tickAnimation = null;
+
 function disablePayWall() {
    document.getElementById("PayWall").style.display = "";
    document.getElementById("PayWall-Tipit").style.display = "none";
+   // TODO: change indicator to "thanks tipit"
+}
+
+function hoverPayWall(button) {
+   button.style.backgroundImage = "url(\"\")"; 
+
+   var tick = document.getElementById("PayWallButtonTick");
+
+   tick.style.display = "";
+   tick.style.marginRight = "0px";
+   tick.style.opacity = "0.0";
+
+   var times = 0;
+   const steps = 20;
+
+   tickAnimation = setInterval(function() {
+      ++times;
+
+      tick.style.marginRight = (times/steps*15) + "px";
+      tick.style.opacity = times/steps;
+
+      if (times >= steps) {
+         clearInterval(tickAnimation);
+      }
+   },
+   10
+   );
+}
+
+function hoverOutPayWall(button) {
+   button.style.background = "rgb(10, 150, 10)";
+
+   clearInterval(tickAnimation);
+
+   var tick = document.getElementById("PayWallButtonTick");
+
+   tick.style.display = "none";
 }
 
 </script>
@@ -760,8 +799,32 @@ function disablePayWall() {
    <p>Many of these displaced people rely upon smartphones to find safe passage. Maps and GPS help chart the best course. Messaging apps provide a lifeline to loved ones. Apps of every kind help find a place to sleep, translate foreign languages, offer guidance on what to pack, and help manage money. Almost every need is met with mobile.</p>
 
 <p id="PayWall-Tipit" style="position:absolute; bottom: 0; padding-top=200px; background-image: linear-gradient(to bottom, transparent, white); width: 100%; padding-top: 200px; margin: 0;">
-<!-- TODO: style paywall tipit -->
-<a href="javascript:void(0)" onClick="disablePayWall()">Tipit PayWall</a>
+   <!-- TODO: style paywall tipit -->
+   <a id="PayWallButton" href="javascript:void(0)"
+      onClick="disablePayWall()"
+      onMouseOver="hoverPayWall(this)"
+      onMouseOut="hoverOutPayWall(this)"
+      style="
+         display: block;
+         width: 100px;
+         height: 30px;
+         margin: 0 auto;
+         background: rgb(10, 150, 10);
+         border-bottom: none;
+         box-shadow: none;
+      ">
+   <img
+      id="PayWallButtonTick"
+      style="
+         display: none;
+         width: 20px;
+         height: 20px;
+         background: rgb(0, 0, 0);
+         margin: 0;
+         float: right;
+      "
+      />
+   </a>
 </p>
 </div>
 <div id="PayWall" style="display:none" >
@@ -771,8 +834,88 @@ function disablePayWall() {
    <h3>A Different Kind of Tech Conference</h3>
 
 <p style="float: left; margin: 10px 20px;">
+<script type="text/javascript">
+
+var donated = false;
+
+function donate(button) {
+
+   if (!donated) {
+      // first donation
+   } else {
+   }
+
+   donated = true;
+}
+
+var tickAnimation = null;
+
+function hoverDonate(button) {
+   button.style.background = "rgb(50, 200, 50)"; 
+
+   var tick = document.getElementById("DonateButtonTick");
+
+   tick.style.display = "";
+   tick.style.marginRight = "0px";
+   tick.style.opacity = "0.0";
+
+   var times = 0;
+   const steps = 20;
+
+   tickAnimation = setInterval(function() {
+      ++times;
+
+      tick.style.marginRight = (times/steps*15) + "px";
+      tick.style.opacity = times/steps;
+
+      if (times >= steps) {
+         clearInterval(tickAnimation);
+      }
+   },
+   10
+   );
+}
+
+function hoverOutDonate(button) {
+   button.style.background = "rgb(10, 150, 10)";
+
+   clearInterval(tickAnimation);
+
+   var tick = document.getElementById("DonateButtonTick");
+
+   tick.style.display = "none";
+}
+
+</script>
+
+
 <!-- TODO: implement charity tipit -->
-   Tipit donation
+   <a id="DonateButton" href="javascript:void(0)"
+      onClick="donate(this)"
+      onMouseOver="hoverDonate(this)"
+      onMouseOut="hoverOutDonate(this)"
+      style="
+         display: block;
+         width: 100px;
+         height: 30px;
+         margin: 0 auto;
+         background: rgb(10, 150, 10);
+         border-bottom: none;
+         box-shadow: none;
+      ">
+   <img
+      id="DonateButtonTick"
+      style="
+         display: none;
+         width: 20px;
+         height: 20px;
+         background: rgb(0, 0, 0);
+         margin: 0;
+         float: right;
+      "
+      />
+   </a>
+
 </p>
 
    <p>Just this week, Mike Butcher, editor-at-large of TechCrunch, organized the <a href="http://www.techfugees.com/" target="_blank">Techfugees Conference</a> in London. The goal was to hone some of the ideas that came out of <a href="https://www.youtube.com/watch?v=kVYXvz2IzZA&amp;feature=youtu.be" target="_blank">an October hackathon</a> that drew engineers, entrepreneurs, designers and NGO members&#8212;some of them former refugees themselves. They offered a bounty of ideas, ranging from tools to report war crimes to apps that can help reunite families. One of the most promising is <a href="http://www.geecycle.org/" target="_blank">GeeCycle</a><span>, a widget developers can add to sites and prompt people to donate <span>smartphones to refugees. </span></span></p>
@@ -864,12 +1007,21 @@ function disablePayWall() {
 			</button>
 		</li>
 		
-		<li class="big-marg-t-med big-marg-l-med big-marg-r-med med-marg-t-med med-marg-b-med no-border">
+		<li class="big-marg med-marg-t-med med-marg-b-med pad-b-med">
 			<a id="mail-share" class="mail clearfix no-underline no-outline" href="mailto:?subject=WIRED:%20Smartphones%20Bring%20Solace%20and%20Aid%20to%20Desperate%20Refugees&#038;body=Check%20out%20this%20great%20article%20I%20read%20on%20WIRED:%0D%0A%0D%0AA%20phone%20can%20be%20the%20difference%20between%20life%20and%20death.%0D%0A%0D%0Ahttp://www.wired.com/2015/12/smartphone-syrian-refugee-crisis/" target="_blank">
 				<i aria-hidden="true" role="presentation" class="block ui ui-social ui-mail relative active float-l marg-r-sm bg-mail"></i>
 				<span class="meta float-l hide-med">Email</span>
 			</a>
 		</li>
+
+		<li class="big-marg-t-med big-marg-l-med big-marg-r-med med-marg-t-med med-marg-b-med no-border">
+         <!-- TODO: add "supports tipit" src -->
+         <img
+            id="PayWallIndicator"
+            src=""
+         />
+		</li>
+
 
 	</ul>
 </div>
