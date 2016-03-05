@@ -42,7 +42,7 @@ var routes = Routes{
     },
     Route{
         "WalletRedeem",
-        "POST",
+        "GET",
         "/wallet/{walletId}/redeem/{coin}",
         WalletRedeem,
     },
