@@ -1,20 +1,23 @@
-GET file:///home/ben/dev/hackathon-six-16/demo-website/dump/www.wired.com/asset…e-promotheus,cn-fe-ads-dart-bundled,plugin-global-min,wired-reviews-nav&ve net::ERR_FILE_NOT_FOUND
-GET file:///home/ben/dev/hackathon-six-16/demo-website/dump/www.wired.com/asset…m-lazy-load-images,outbrain,blockadblock,tracking,ads,wired&ver=1456512455 net::ERR_FILE_NOT_FOUND
+[DONE] http://www.wired.com/wp-content/themes/Phoenix/assets/css/style.css?ver=1456512455
+[DONE] http://www.wired.com/wp-content/themes/Phoenix/assets/css/hf.css?ver=1456512455
+[DONE] http://www.wired.com/wp-content/themes/Phoenix/assets/js/vendor/picturefill.min.js
+http://www.wired.com/wp-content/themes/Phoenix/assets/images/apple-touch-icon.png
+http://www.wired.com/wp-includes/js/wp-emoji-release.min.js?ver=4.3.1
+https://subscribe.wired.com/ams/page-ads.js?ad_category_prefix=2015&browser…IR_MOBILE_NAV_LINK%2CAMS_WIR_MOBILE_FOOTER_LINK%2CAMS_WIR_POPUP_FLOATINGAD
+http://event.wired.com/images/event.gif?e0_sc=WIR&e0_ec=most_viewed&e0_id=1…ring%20Solace%20and%20Aid%20to%20Desperate%20Refugees&rnd=2673970466988853
+http://www.wired.com/wp-content/themes/Phoenix/assets/images/favicon.ico
+
+http://cdn.optimizely.com/js/2926210385.js
+http://pagead2.googlesyndication.com/pagead/show_ads.js
+http://assets.adobedtm.com/6372cf21ef88ee60bc2977a4898dcb5c7945a212/satelliteLib-5e0259aff0b35c55ae1387e43a61e5902ea0cdb6.js
+http://b.scorecardresearch.com/beacon.js
+https://use.typekit.net/c/8e1b9d/1w;ambroise-francois-std,2,gGx:W:n6;brando…53fe59751baa90a912261e9b156176f8b45a1d5e9a1c0047066b879bafcdbb3ec903fb065b
+http://www.googletagservices.com/tag/js/gpt.js
+http://segment-data.zqtk.net/conde-nast?url=file%3A%2F%2F%2Fhome%2Fben%2Fde…Fwww.wired.com%2F2015%2F12%2Fsmartphone-syrian-refugee-crisis%2Findex.html
+http://static.chartbeat.com/js/chartbeat_pub.js
 
 GET file://wired.disqus.com/embed.js net::ERR_FILE_NOT_FOUND
 GET file://wired.disqus.com/count.js net::ERR_FILE_NOT_FOUND
 GET file://static.parsely.com/p.js net::ERR_FILE_NOT_FOUND
-GET file://use.typekit.net/joo1eie.js net::ERR_FILE_NOT_FOUND
-
-GET http://www.wired.com/wp-content/themes/Phoenix/assets/css/style.css?ver=1456512455 net::ERR_INTERNET_DISCONNECTED
-GET http://www.wired.com/wp-content/themes/Phoenix/assets/css/hf.css?ver=1456512455 net::ERR_INTERNET_DISCONNECTED
-GET http://www.wired.com/wp-content/themes/Phoenix/assets/js/vendor/picturefill.min.js net::ERR_INTERNET_DISCONNECTED
-GET http://www.wired.com/wp-includes/js/wp-emoji-release.min.js?ver=4.3.1 net::ERR_INTERNET_DISCONNECTED
-GET http://www.wired.com/wp-content/themes/Phoenix/assets/images/apple-touch-icon.png net::ERR_INTERNET_DISCONNECTED
-GET https://subscribe.wired.com/ams/page-ads.js?ad_category_prefix=2015&browser…IR_MOBILE_NAV_LINK%2CAMS_WIR_MOBILE_FOOTER_LINK%2CAMS_WIR_POPUP_FLOATINGAD net::ERR_INTERNET_DISCONNECTED
-
-GET http://cdn.optimizely.com/js/2926210385.js net::ERR_INTERNET_DISCONNECTED
-GET http://pagead2.googlesyndication.com/pagead/show_ads.js net::ERR_INTERNET_DISCONNECTED
-GET http://assets.adobedtm.com/6372cf21ef88ee60bc2977a4898dcb5c7945a212/satelliteLib-5e0259aff0b35c55ae1387e43a61e5902ea0cdb6.js net::ERR_INTERNET_DISCONNECTED
-GET http://b.scorecardresearch.com/beacon.js net::ERR_INTERNET_DISCONNECTED
-GET http://static.chartbeat.com/js/chartbeat_pub.js net::ERR_INTERNET_DISCONNECTED
+GET file://cdn.yldbt.com/js/yieldbot.intent.js net::ERR_FILE_NOT_FOUND
+GET file://c.amazon-adsystem.com/aax2/amzn_ads.js net::ERR_FILE_NOT_FOUND
