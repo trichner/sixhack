@@ -1,7 +1,10 @@
+var qrUrl = 'https://api.qrserver.com/v1/create-qr-code';
+var qrParam = '?size=150x150&data=';
+var serverUrl = 'https://coffe-cup.eu-gb.mybluemix.net/wallet/';
+
 // Copyright (c) 2014 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
 /**
  * Get the current URL.
  *
@@ -55,15 +58,18 @@ function getCurrentTabUrl(callback) {
  *   The callback gets a string that describes the failure reason.
  */
 function getImageUrl(id, callback, errorCallback) {
-    var imageUrl = 'https://api.qrserver.com/v1/create-qr-code' +
-    '?size=150x150&data=' + id;//encodeURIComponent(searchTerm);
     var width = parseInt(150);
     var height = parseInt(150);
     //console.assert(
     //    typeof imageUrl == 'string' && !isNaN(width) && !isNaN(height),
     //    'Unexpected respose!');
-    callback(imageUrl, width, height);
+    callback(qrUrl + qrParam + serverUrl + id, width, height);
 }
+
+function countWallets() {
+  console.log(walletIds.length);
+}
+
 function renderStatus(statusText) {
   document.getElementById('status').textContent = statusText;
 }
@@ -73,6 +79,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var array = new Uint8Array(16);
     window.crypto.getRandomValues(array);
     var transactionId = window.btoa(array);
+    walletIds.push(transactionId);
+    chrome.storage.local.set({'wallet-ids':walletIds});
 
     renderStatus('Getting a new QR code for ' + transactionId);
 
@@ -82,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
           'Got: ' + imageUrl);
 
       renderStatus('UserID: ' + macId + '\n' +
-          'ID: ' + transactionId);
+          'ID: ' + transactionId.substring(1,12) + '...');
       var imageResult = document.getElementById('image-result');
       // Explicitly set the width/height to minimize the number of reflows. For
       // a single image, this does not matter, but if you're going to embed
@@ -108,4 +116,37 @@ chrome.storage.local.get('machine-id', function(item){
     chrome.storage.local.set({'machine-id':storedMacId});
   }
   macId = storedMacId;
+});
+
+var walletIds = null;
+chrome.storage.local.get('wallet-ids', function(item){
+  var storedWalletIds = item['wallet-ids'];
+  if(!storedWalletIds) {
+    storedWalletIds = [];
+    chrome.storage.local.set({'wallet-ids':storedWalletIds});
+  }
+  walletIds = storedWalletIds;
+});
+
+var alarmClock = {
+
+        onHandler : function(e) {
+            chrome.alarms.create("myAlarm", {delayInMinutes: 0.05, periodInMinutes: 0.05} );
+                    window.close();
+        },
+
+        offHandler : function(e) {
+            chrome.alarms.clear("myAlarm");
+                    window.close();
+        },
+
+        setup: function() {
+            var a = document.getElementById('alarmOn');
+            a.addEventListener('click',  alarmClock.onHandler );
+            var a = document.getElementById('alarmOff');
+            a.addEventListener('click',  alarmClock.offHandler );
+        }
+};
+document.addEventListener('DOMContentLoaded', function () {
+    alarmClock.setup();
 });
