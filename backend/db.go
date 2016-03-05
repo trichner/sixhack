@@ -61,7 +61,6 @@ func GetWallet(id string) (Wallet, error) {
 	err := db.View(func(tx *bolt.Tx) error {
 	    b := tx.Bucket([]byte(bucket))
 	    v := b.Get([]byte(id))
-	    log.Printf("The answer is: %s\n", v)
 	    var err error
 	    wallet, err = WalletDecode(v)
 	    return err
@@ -84,9 +83,7 @@ func GetWalletCount(id string) (int, error) {
 
 func GetWallets() []Wallet {
 	var wallets = make([]Wallet,0)
-	log.Printf("DB Walltes\n")
 	db.View(func(tx *bolt.Tx) error {
-		log.Printf("Query Wallets\n")
 	    // Assume bucket exists and has keys
 	    b := tx.Bucket([]byte(bucket))
 
@@ -95,7 +92,6 @@ func GetWallets() []Wallet {
 	    for k, v := c.First(); k != nil; k, v = c.Next() {
 	        wallet, err := WalletDecode(v)
 	        if err==nil{
-	        	log.Printf("Wallet: %s \n",wallet)
 	        	wallets = append(wallets,wallet)
 	        }
 	    }
