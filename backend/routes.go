@@ -53,6 +53,12 @@ var routes = Routes{
         WalletCreate,
     },
     Route{
+        "WalletCreate",
+        "GET",
+        "/wallet/{walletId}/create",
+        WalletCreate,
+    },
+    Route{
         "WalletCount",
         "GET",
         "/wallet/{walletId}/count",
