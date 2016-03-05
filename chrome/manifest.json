@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "CoffeeCup",
-  "description": "This extension shows a Google Image search result for the current page",
+  "description": "",
   "version": "0.1",
 
   "browser_action": {
@@ -12,11 +12,12 @@
   "permissions": [
     "activeTab",
     "https://api.qrserver.com/v1/",
+    "https://n1b.ch/",
     "storage",
     "alarms"
   ],
   "background": {
-    "scripts": ["pollApi.js"],
+    "scripts": ["pollApi.js","lib/sha256.js"],
     "persistent": false
   }
 }

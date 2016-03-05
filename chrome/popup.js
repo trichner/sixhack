@@ -1,6 +1,10 @@
 var qrUrl = 'https://api.qrserver.com/v1/create-qr-code';
 var qrParam = '?size=150x150&data=';
-var serverUrl = 'https://coffe-cup.eu-gb.mybluemix.net/wallet/';
+var serverUrl = 'https://n1b.ch:7443/wallet/';
+
+function btoaUrl(string) {
+  return window.btoa(string).replace(/\+/g,'-').replace(/\//g,'_');
+}
 
 // Copyright (c) 2014 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -63,7 +67,7 @@ function getImageUrl(id, callback, errorCallback) {
     //console.assert(
     //    typeof imageUrl == 'string' && !isNaN(width) && !isNaN(height),
     //    'Unexpected respose!');
-    callback(qrUrl + qrParam + serverUrl + id, width, height);
+    callback(qrUrl + qrParam + serverUrl + id + '/create', width, height);
 }
 
 function countWallets() {
@@ -78,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
   getCurrentTabUrl(function(url) {
     var array = new Uint8Array(16);
     window.crypto.getRandomValues(array);
-    var transactionId = window.btoa(array);
+    var transactionId = btoaUrl(array);
     walletIds.push(transactionId);
     chrome.storage.local.set({'wallet-ids':walletIds});
 
@@ -150,3 +154,7 @@ var alarmClock = {
 document.addEventListener('DOMContentLoaded', function () {
     alarmClock.setup();
 });
+
+function tip(amount) {
+  
+}
