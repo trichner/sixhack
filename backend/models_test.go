@@ -4,11 +4,12 @@ import (
     "github.com/stretchr/testify/assert"
     "testing"
     "fmt"
+    "github.com/trichner/sixhack/backend/hash"
 )
 
 func TestWalledEncoding(t *testing.T) {
 
-    chain, err := GenerateHashChain(10)
+    chain, err := hash.GenerateHashChain(10)
     assert.Nil(t, err)
 
     wallet := Wallet{
