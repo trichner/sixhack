@@ -2,10 +2,7 @@ package main
 
 import (
     "encoding/json"
-    //"io"
-    //"io/ioutil"
     "net/http"
-    "strconv"
 
     "github.com/gorilla/mux"
 )
@@ -35,7 +32,7 @@ func WalletGet(w http.ResponseWriter, r *http.Request) {
 
     wallet, err := GetWallet(walletId)
     if err!=nil {
-        w.WriteHeader(http.StatusInternalServerError)
+        w.WriteHeader(http.StatusNotFound)
         return
     }
 
@@ -46,8 +43,6 @@ func WalletGet(w http.ResponseWriter, r *http.Request) {
         return
     }
     w.Write(js)
-    w.WriteHeader(http.StatusOK)
-
 }
 
 func WalletGetCount(w http.ResponseWriter, r *http.Request) {
@@ -80,14 +75,12 @@ func WalletsGet(w http.ResponseWriter, r *http.Request) {
     wallets:= GetWallets()
 
     w.Header().Set("Content-Type", "application/json")
-    js, err := json.Marshal(wallets)
+    js, err := json.MarshalIndent(wallets, "", "   ")
     if err!=nil {
         w.WriteHeader(http.StatusInternalServerError)
         return
     }
     w.Write(js)
-    w.WriteHeader(http.StatusOK)
-
 }
 
 func WalletRedeem(w http.ResponseWriter, r *http.Request) {
@@ -106,21 +99,11 @@ func WalletRedeem(w http.ResponseWriter, r *http.Request) {
     }
 
     coins := RedeemCoins(walletId,coin)
-    w.Header().Set("Content-Type", "text/plain")
-    w.Write([]byte(strconv.Itoa(coins)))
-
-    // if err := json.Unmarshal(body, &todo); err != nil {
-    //     w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-    //     w.WriteHeader(422) // unprocessable entity
-    //     if err := json.NewEncoder(w).Encode(err); err != nil {
-    //         panic(err)
-    //     }
-    // }
-
-    // t := RepoCreateTodo(todo)
-    // w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-    // w.WriteHeader(http.StatusCreated)
-    // if err := json.NewEncoder(w).Encode(t); err != nil {
-    //     panic(err)
-    // }
+    js, err := json.Marshal(coins)
+    if err!=nil {
+        w.WriteHeader(http.StatusInternalServerError)
+        return
+    }
+    w.Header().Set("Content-Type", "application/json")
+    w.Write(js)
 }

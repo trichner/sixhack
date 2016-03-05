@@ -3,9 +3,11 @@ package main
 import (
 	"log"
 	"github.com/boltdb/bolt"
+	"github.com/trichner/sixhack/backend/hash"
 )
 
 const bucket = "Wallets"
+
 var db *bolt.DB
 
 func OpenDB() {
@@ -30,7 +32,7 @@ func OpenDB() {
 
 func CreateWallet(id string, coins int) (Wallet, error) {
 
-	chain, err := GenerateHashChain(coins)
+	chain, err := hash.GenerateHashChain(coins)
 	if err != nil {
 		log.Fatal(err)
 		return Wallet{}, err
@@ -61,7 +63,6 @@ func GetWallet(id string) (Wallet, error) {
 	err := db.View(func(tx *bolt.Tx) error {
 	    b := tx.Bucket([]byte(bucket))
 	    v := b.Get([]byte(id))
-	    log.Printf("The answer is: %s\n", v)
 	    var err error
 	    wallet, err = WalletDecode(v)
 	    return err
@@ -76,7 +77,7 @@ func GetWalletCount(id string) (int, error) {
 	    v := b.Get([]byte(id))
 	    var err error
 	    wallet, err := WalletDecode(v)
-	    count = CountChain(HashChain{wallet.Seed,wallet.Tail})
+	    count = hash.CountChain(hash.HashChain{wallet.Seed,wallet.Tail})
 	    return err
 	})
 	return count, err
@@ -84,9 +85,7 @@ func GetWalletCount(id string) (int, error) {
 
 func GetWallets() []Wallet {
 	var wallets = make([]Wallet,0)
-	log.Printf("DB Walltes\n")
 	db.View(func(tx *bolt.Tx) error {
-		log.Printf("Query Wallets\n")
 	    // Assume bucket exists and has keys
 	    b := tx.Bucket([]byte(bucket))
 
@@ -95,7 +94,6 @@ func GetWallets() []Wallet {
 	    for k, v := c.First(); k != nil; k, v = c.Next() {
 	        wallet, err := WalletDecode(v)
 	        if err==nil{
-	        	log.Printf("Wallet: %s \n",wallet)
 	        	wallets = append(wallets,wallet)
 	        }
 	    }
@@ -115,7 +113,7 @@ func RedeemCoins(id string, coin string) (int) {
 	    if err!=nil {
 	    	return err
 	    }
-	    coins = CountChain(HashChain{coin, wallet.Tail})
+	    coins = hash.CountChain(hash.HashChain{coin, wallet.Tail})
 	    if coins>0 {
 	    	wallet.Tail = coin
 	    	w, err := wallet.encode()
