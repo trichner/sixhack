@@ -43,8 +43,6 @@ func WalletGet(w http.ResponseWriter, r *http.Request) {
         return
     }
     w.Write(js)
-    w.WriteHeader(http.StatusOK)
-
 }
 
 func WalletGetCount(w http.ResponseWriter, r *http.Request) {
