@@ -3,7 +3,7 @@
 
   "name": "TipIt",
   "description": "TipIt adds MicroTransactions to your Browser based on Paymit",
-  "version": "0.2",
+  "version": "1.0",
 
   "browser_action": {
     "default_icon": "res/cup3.png",

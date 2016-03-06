@@ -174,6 +174,8 @@ function convertBadgeToString(input) {
   // numbers above 1000 get rounded down
   if(input < 1000) {
     return (''+input);
+  } else if (input < 10000){
+    return (input/1000+'k');
   } else {
     return (parseInt(input/1000)+'k');
   }
