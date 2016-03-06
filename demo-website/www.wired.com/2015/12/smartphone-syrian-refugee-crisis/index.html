@@ -752,13 +752,35 @@ ecomUrl: 'https://subscribe.wired.com/api/circ/xml/Transaction',
 var tickAnimation = null;
 
 function disablePayWall() {
-   document.getElementById("PayWall").style.display = "";
+
+   var payWall = document.getElementById("PayWall");
+   payWall.style.overflow = "hidden";
+   payWall.style.maxHeight = 0;
+   payWall.style.display = "";
+
    document.getElementById("PayWall-Tipit").style.display = "none";
    // TODO: change indicator to "thanks tipit"
+
+   const maxHeight = 10000;
+   const steps = 500;
+   var times = 0;
+
+   var animation = setInterval(
+      function() {
+         ++times;
+         var scale = times/steps;
+         payWall.style.maxHeight = (scale*maxHeight) + "px";
+
+         if (times >= steps) {
+            clearInterval(animation);
+         }
+      },
+      10
+   );
 }
 
 function hoverPayWall(button) {
-   button.style.backgroundImage = "url(\"\")"; 
+   button.style.backgroundImage = "url('../../../../tip.v.small.hover-07-07.png')";
 
    var tick = document.getElementById("PayWallButtonTick");
 
@@ -784,7 +806,7 @@ function hoverPayWall(button) {
 }
 
 function hoverOutPayWall(button) {
-   button.style.background = "rgb(10, 150, 10)";
+   button.style.backgroundImage = "url('../../../../tip.v.small-07.png')";
 
    clearInterval(tickAnimation);
 
@@ -798,29 +820,42 @@ function hoverOutPayWall(button) {
 <div style="position: relative; margin: 0;">
    <p>Many of these displaced people rely upon smartphones to find safe passage. Maps and GPS help chart the best course. Messaging apps provide a lifeline to loved ones. Apps of every kind help find a place to sleep, translate foreign languages, offer guidance on what to pack, and help manage money. Almost every need is met with mobile.</p>
 
-<p id="PayWall-Tipit" style="position:absolute; bottom: 0; padding-top=200px; background-image: linear-gradient(to bottom, transparent, white); width: 100%; padding-top: 200px; margin: 0;">
-   <!-- TODO: style paywall tipit -->
+<p id="PayWall-Tipit"
+   style="
+      position:absolute;
+      bottom: 0;
+      padding-top=200px;
+      background-image: linear-gradient(to bottom, transparent, white);
+      width: 100%;
+      padding-top: 200px;
+      margin: 0;
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-bottom-color: black;
+      ">
    <a id="PayWallButton" href="javascript:void(0)"
       onClick="disablePayWall()"
       onMouseOver="hoverPayWall(this)"
       onMouseOut="hoverOutPayWall(this)"
       style="
+         background: none;
          display: block;
-         width: 100px;
-         height: 30px;
+         width: 110px;
+         height: 31px;
          margin: 0 auto;
-         background: rgb(10, 150, 10);
+         background-image: url('../../../../tip.v.small-07.png');
+         background-repeat: no-repeat;
          border-bottom: none;
          box-shadow: none;
       ">
    <img
       id="PayWallButtonTick"
+      src="../../../../check-13.png"
       style="
+         width: 31px;
+         height: 31px;
          display: none;
-         width: 20px;
-         height: 20px;
-         background: rgb(0, 0, 0);
-         margin: 0;
+         margin: auto;
          float: right;
       "
       />
@@ -834,6 +869,7 @@ function hoverOutPayWall(button) {
    <h3>A Different Kind of Tech Conference</h3>
 
 <p style="float: left; margin: 10px 20px;">
+<!-- Donate Start -->
 <script type="text/javascript">
 
 var donated = false;
@@ -851,7 +887,7 @@ function donate(button) {
 var tickAnimation = null;
 
 function hoverDonate(button) {
-   button.style.background = "rgb(50, 200, 50)"; 
+   button.style.backgroundImage = "url('../../../../tip.v.small.hover-07-07.png')";
 
    var tick = document.getElementById("DonateButtonTick");
 
@@ -877,7 +913,7 @@ function hoverDonate(button) {
 }
 
 function hoverOutDonate(button) {
-   button.style.background = "rgb(10, 150, 10)";
+   button.style.backgroundImage = "url('../../../../tip.v.small-07.png')";
 
    clearInterval(tickAnimation);
 
@@ -895,28 +931,31 @@ function hoverOutDonate(button) {
       onMouseOver="hoverDonate(this)"
       onMouseOut="hoverOutDonate(this)"
       style="
+         background: none;
          display: block;
-         width: 100px;
-         height: 30px;
+         width: 110px;
+         height: 31px;
          margin: 0 auto;
-         background: rgb(10, 150, 10);
+         background-image: url('../../../../tip.v.small-07.png');
+         background-repeat: no-repeat;
          border-bottom: none;
          box-shadow: none;
       ">
    <img
       id="DonateButtonTick"
+      src="../../../../check-13.png"
       style="
+         width: 31px;
+         height: 31px;
          display: none;
-         width: 20px;
-         height: 20px;
-         background: rgb(0, 0, 0);
-         margin: 0;
+         margin: auto;
          float: right;
       "
       />
    </a>
 
 </p>
+<!-- Donate End -->
 
    <p>Just this week, Mike Butcher, editor-at-large of TechCrunch, organized the <a href="http://www.techfugees.com/" target="_blank">Techfugees Conference</a> in London. The goal was to hone some of the ideas that came out of <a href="https://www.youtube.com/watch?v=kVYXvz2IzZA&amp;feature=youtu.be" target="_blank">an October hackathon</a> that drew engineers, entrepreneurs, designers and NGO members&#8212;some of them former refugees themselves. They offered a bounty of ideas, ranging from tools to report war crimes to apps that can help reunite families. One of the most promising is <a href="http://www.geecycle.org/" target="_blank">GeeCycle</a><span>, a widget developers can add to sites and prompt people to donate <span>smartphones to refugees. </span></span></p>
    <p>Butcher started the project over the summer after seeing the harrowing images of children’s bodies washed ashore. “I looked around and I just couldn’t see a flag under which tech startups and developers could rally around to address the crisis. I put up a Facebook group and a couple days later, we had several hundred members. Now it’s over 2,000. I was clearly pushing at an open door and others wanted to get involved.”</p>
