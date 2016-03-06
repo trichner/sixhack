@@ -875,7 +875,7 @@ function hoverOutPayWall(button) {
 
 <!-- Donate Start -->
 <div>
-<img class="size-default-top-art wp-image-1940849" src="../../../wp-content/uploads/2015/12/1-HUlL16RNjUXG7NZHaTETUA-582x388.jpeg" alt="&quot;What’s in My Bag&quot; from the International Rescue Committee captures heartbreaking snapshots of the belongings refugees carry. " width="582" height="388" />
+<img class="size-default-top-art wp-image-1940849" src="../../../../coffee_crysis.png" alt="&quot;What’s in My Bag&quot; from the International Rescue Committee captures heartbreaking snapshots of the belongings refugees carry. " width="582"/>
 
 
 <script type="text/javascript">
@@ -883,6 +883,11 @@ function hoverOutPayWall(button) {
 var donated = false;
 
 function donate(button) {
+
+   if (donated) {
+      // ignore
+      return;
+   }
 
    window.TipIt.request(100,
    function(n) {
