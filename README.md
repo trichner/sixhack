@@ -35,3 +35,22 @@ Retrieving Wallets/Chains
 	"tail": "Z-01liu8KBaFUgp5cVSgByCxE5fOyDmjnqGgZMp4FZs="
 }
 ```
+
+## Browser API
+
+### Messages
+page -> plugin
+```
+{
+	id: "TIPIT_REQ_123",
+	amount: 42
+}
+```
+
+plugin -> page
+```
+{
+	id: "TIPIT_RESP_123",
+	coin: "asKINDFNMCXisiiwejiwfsd="
+}
+```
