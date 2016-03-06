@@ -87,6 +87,91 @@ function retreiveCoins(amount,callback) {
 /*
   Core functionality that updates the wallets
 */
+function checkWalletId(wid,cb){
+    var x = new XMLHttpRequest();
+    x.open('GET', serverUrl + wid);
+    console.log('Checking...' + serverUrl+wid);
+    x.responseType = 'json';
+    x.onload = function() {
+      // Parse and process the response
+      var response = x.response;
+      if (x.status == 404 || !response || !response.seed || !response.tail || !response.id) {
+        cb(new Error("No wallet found"));
+        return;
+      }
+      var seed = response.seed;
+      var tail = response.tail;
+      var id = response.id;
+      var wallet = Wallet.generateWallet(id, seed, tail);
+
+      var walletHashMap = {};
+      chrome.storage.local.get('wallet-hashmap', function(item){
+        var storedWalletHashMap = item['wallet-hashmap'];
+        if(!storedWalletHashMap) {
+          storedWalletHashMap = {};
+          chrome.storage.local.set({'wallet-hashmap':storedWalletHashMap});
+        }
+        walletHashMap = storedWalletHashMap;
+        walletHashMap[id] = wallet;
+        var newWalletAmount = 0;
+        console.log('WalletHashMap size: ' + Object.keys(walletHashMap).length);
+        for(var key in walletHashMap) {
+          if(walletHashMap.hasOwnProperty(key)) {
+            newWalletAmount += walletHashMap[key].hashes.length;
+          }
+        }
+        chrome.storage.local.set({'wallet-hashmap':walletHashMap});
+        var walletAmount = null;
+        chrome.storage.local.get('wallet-amount', function(item){
+          var storedWalletAmount = item['wallet-amount'];
+          if(!storedWalletAmount) {
+            storedWalletAmount = 0;
+            chrome.storage.local.set({'wallet-amount':storedWalletAmount});
+          }
+          walletAmount = storedWalletAmount;
+          if(newWalletAmount > walletAmount) {
+            updateBadge(newWalletAmount-walletAmount, 1);
+            animateIcon(newWalletAmount);
+            walletAmount = newWalletAmount;
+            chrome.storage.local.set({'wallet-amount':walletAmount});
+          }
+          else if (newWalletAmount < walletAmount) {
+            updateBadge(newWalletAmount-walletAmount, 2);
+            animateIcon(newWalletAmount);
+            walletAmount = newWalletAmount;
+            chrome.storage.local.set({'wallet-amount':walletAmount});
+          }
+          cb();
+        });
+      });
+    }
+
+    x.onerror = function() {
+      cb(new Error("Network Error."))
+    };
+    x.send();
+}
+
+function checkWalletIds(ids,cb){
+  var ajaxCallsRemaining = ids.length;
+  var returnedData = [];
+  var success = 0;
+
+  for (var i = 0; i < ids.length; i++ ){
+      checkWalletId(ids[i], function(err) {
+        if(err) {
+          console.log("Completed with errors: " + err)
+        } else {
+          success++;
+        }
+        --ajaxCallsRemaining;
+        if (ajaxCallsRemaining <= 0) {
+            cb(success)
+        }
+      });
+  }
+}
+
 function updateWallets(callback) {
   var walletIds = [];
   chrome.storage.local.get('wallet-ids', function(item){
@@ -95,72 +180,7 @@ function updateWallets(callback) {
       storedWalletIds = [];
       chrome.storage.local.set({'wallet-ids':storedWalletIds});
     }
-    walletIds = storedWalletIds;
-    var u = 0;
-    for(var i = 0; i < walletIds.length; i++) {
-      var x = new XMLHttpRequest();
-      x.open('GET', serverUrl + walletIds[i]);
-      //console.log('Checking...' + serverUrl+walletIds[i]);
-      x.responseType = 'json';
-      x.onload = function() {
-        // Parse and process the response
-        var response = x.response;
-        if (x.status == 404 || !response || !response.seed || !response.tail ||
-            !response.id) {
-          //console.log("No wallet with this id");
-          return;
-        }
-        var seed = response.seed;
-        var tail = response.tail;
-        var id = response.id;
-        var wallet = Wallet.generateWallet(id, seed, tail);
-
-        var walletHashMap = {};
-        chrome.storage.local.get('wallet-hashmap', function(item){
-          var storedWalletHashMap = item['wallet-hashmap'];
-          if(!storedWalletHashMap) {
-            storedWalletHashMap = {};
-            chrome.storage.local.set({'wallet-hashmap':storedWalletHashMap});
-          }
-          walletHashMap = storedWalletHashMap;
-          walletHashMap[id] = wallet;
-          var newWalletAmount = 0;
-          console.log('WalletHashMap size: ' + Object.keys(walletHashMap).length);
-          for(var key in walletHashMap) {
-            if(walletHashMap.hasOwnProperty(key)) {
-              newWalletAmount += walletHashMap[key].hashes.length;
-            }
-          }
-          chrome.storage.local.set({'wallet-hashmap':walletHashMap});
-          var walletAmount = null;
-          chrome.storage.local.get('wallet-amount', function(item){
-            var storedWalletAmount = item['wallet-amount'];
-            if(!storedWalletAmount) {
-              storedWalletAmount = 0;
-              chrome.storage.local.set({'wallet-amount':storedWalletAmount});
-            }
-            walletAmount = storedWalletAmount;
-            if(newWalletAmount > walletAmount) {
-              updateBadge(newWalletAmount-walletAmount, 1);
-              animateIcon(newWalletAmount);
-              walletAmount = newWalletAmount;
-              chrome.storage.local.set({'wallet-amount':walletAmount});
-            }
-            else if (newWalletAmount < walletAmount) {
-              updateBadge(newWalletAmount-walletAmount, 2);
-              animateIcon(newWalletAmount);
-              walletAmount = newWalletAmount;
-              chrome.storage.local.set({'wallet-amount':walletAmount});
-            }
-          });
-        });
-        callback(id, seed, tail);
-      };
-      x.onerror = function() {
-        errorCallback('Network error.');
-      };
-      x.send();
-    }
+    checkWalletIds(storedWalletIds,callback)
   });
 
 }
@@ -261,6 +281,7 @@ chrome.runtime.onConnect.addListener(function(port) {
   Listener for reoccuring 'alarm'
 */
 chrome.alarms.onAlarm.addListener(function(alarm) {
-  updateWallets(function(id, seed, tail) {
-  console.log('id: '+id + ' seed: ' + seed + ' tail: ' + tail) });
+  updateWallets(function(checked) {
+    console.log('checked: ' + checked + ' wallets successfully');
+  });
 });
