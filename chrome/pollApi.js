@@ -41,23 +41,26 @@ function hashStep(input) {
   return btoaUrl(shaObj.getHash("BYTES"));
 }
 
-function HashObj (wallet, hash) {
-  this.wallet = wallet;
-  this.hash = hash;
-}
-
-function retreiveCoins(amount) {
-  chrome.storage.local.get('wallet-ids', function(item) {
-    var storedWalletIds = item['wallet-ids'];
-    chrome.storage.local.get('wallet-hashmap', function(item){
-      var storedWalletHashMap = item['wallet-hashmap'];
-      for(var i = 0; i < amount; i++) {
-        storedWalletHashMap[storedWalletIds[0]].hashes.pop();
+function retreiveCoins(amount,callback) {
+  chrome.storage.local.get('wallet-hashmap', function(item){
+    var walletHashMap = item['wallet-hashmap'];
+    var key = "";
+    for(key in walletHashMap) {
+      if(walletHashMap.hasOwnProperty(key)) {
+        walletHashMap[key].hashes.length;
+        for(var i = 0; i < amount; i++) {
+          console.log(key)
+          walletHashMap[key].hashes.pop();
+        }
+        break;
       }
-      chrome.storage.local.set({'wallet-hashmap':storedWalletHashMap});
-      return new HashObj(storedWalletIds[0],storedWalletIds[0].hashes[storedWalletIds[0].hashes.length-1]);
+    }
+    chrome.storage.local.set({'wallet-hashmap':walletHashMap});
+    callback({
+            wallet: key,
+            hash:walletHashMap[key].hashes[walletHashMap[key].hashes.length-1]
+      });
     })
-  })
 
 }
 
@@ -205,9 +208,10 @@ chrome.storage.local.get('wallet-amount', function(item){
 // receive message from content script
 chrome.runtime.onConnect.addListener(function(port) {
   port.onMessage.addListener(function(msg) {
-    var hashObj = retreiveCoins(msg.amount);
-    var newMsg = {id: msg.id.replace("REQ", "RESP"), wallet: hashObj.wallet, coin: hashObj.coin };
-    port.postMessage(newMsg);
+    retreiveCoins(msg.amount, function(hashObj) {
+      var newMsg = {id: msg.id.replace("REQ", "RESP"), wallet: hashObj.wallet, coin: hashObj.hash };
+      port.postMessage(newMsg);
+    });
   });
 });
 

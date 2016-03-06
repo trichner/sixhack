@@ -24,7 +24,7 @@
     "48": "res/icon48.png"
   },
   "content_scripts": [ {
-    "matches": ["http://www.google.com/*"],
+    "matches": ["file://*"],
     "css": ["mystyles.css"],
     "js": ["content_script.js"]
   } ]
