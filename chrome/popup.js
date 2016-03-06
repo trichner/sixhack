@@ -135,7 +135,7 @@ chrome.storage.local.get('wallet-ids', function(item){
 var alarmClock = {
 
         onHandler : function(e) {
-            chrome.alarms.create("myAlarm", {delayInMinutes: 0.05, periodInMinutes: 0.05} );
+            chrome.alarms.create("myAlarm", {delayInMinutes: 0.02, periodInMinutes: 0.02} );
                     window.close();
         },
 
@@ -156,5 +156,5 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function tip(amount) {
-  
+
 }

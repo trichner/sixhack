@@ -21,7 +21,7 @@ Wallet.generateWallet = function(id, seed, tail) {
 
 function generateHashes(head, tail) {
   var hashes = [];
-  var limit = 10000;
+  var limit = 20000;
   var coins = 0;
   for(;coins < limit;coins++) {
     if(head == tail) {
@@ -45,12 +45,13 @@ function retreiveCoins(amount,callback) {
   chrome.storage.local.get('wallet-hashmap', function(item){
     var walletHashMap = item['wallet-hashmap'];
     var key = "";
+    var poppedElement;
     for(key in walletHashMap) {
       if(walletHashMap.hasOwnProperty(key)) {
         walletHashMap[key].hashes.length;
         for(var i = 0; i < amount; i++) {
           console.log(key)
-          walletHashMap[key].hashes.pop();
+          poppedElement = walletHashMap[key].hashes.pop();
         }
         break;
       }
@@ -58,7 +59,7 @@ function retreiveCoins(amount,callback) {
     chrome.storage.local.set({'wallet-hashmap':walletHashMap});
     callback({
             wallet: key,
-            hash:walletHashMap[key].hashes[walletHashMap[key].hashes.length-1]
+            hash: poppedElement
       });
     })
 
@@ -119,6 +120,12 @@ function updateWallets(callback) {
             walletAmount = storedWalletAmount;
             if(newWalletAmount > walletAmount) {
               updateBadge(newWalletAmount-walletAmount, 1);
+              animateIcon(newWalletAmount);
+              walletAmount = newWalletAmount;
+              chrome.storage.local.set({'wallet-amount':walletAmount});
+            }
+            else if (newWalletAmount < walletAmount) {
+              updateBadge(newWalletAmount-walletAmount, 2);
               animateIcon(newWalletAmount);
               walletAmount = newWalletAmount;
               chrome.storage.local.set({'wallet-amount':walletAmount});
