@@ -3,6 +3,7 @@ package main
 import (
     "encoding/json"
     "net/http"
+    "strconv"
 
     "github.com/gorilla/mux"
 )
@@ -14,7 +15,19 @@ func WalletCreate(w http.ResponseWriter, r *http.Request){
         w.WriteHeader(http.StatusBadRequest)
         return
     }
-    _, err := CreateWallet(walletId,1000) //TODO allow other amount
+
+
+    var amount = 1000
+
+    parms := r.URL.Query()["amount"]
+    if len(parms) > 0 {
+        n, err := strconv.Atoi(parms[0])
+        if err==nil {
+            amount = n
+        }
+    }
+
+    _, err := CreateWallet(walletId,amount) //TODO allow other amount
     if err != nil {
         w.WriteHeader(http.StatusInternalServerError)
     }
@@ -25,6 +38,7 @@ func WalletCreate(w http.ResponseWriter, r *http.Request){
 func WalletGet(w http.ResponseWriter, r *http.Request) {
     vars := mux.Vars(r)
     walletId, found  := vars["walletId"]
+
     if !found {
         w.WriteHeader(http.StatusBadRequest)
         return
