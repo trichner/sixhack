@@ -1,12 +1,12 @@
 {
   "manifest_version": 2,
 
-  "name": "CoffeeCup",
-  "description": "",
-  "version": "0.1",
+  "name": "TipIt",
+  "description": "TipIt adds MicroTransactions to your Browser based on Paymit",
+  "version": "0.2",
 
   "browser_action": {
-    "default_icon": "res/coffee_closed.png",
+    "default_icon": "res/cup3.png",
     "default_popup": "popup.html"
   },
   "permissions": [
@@ -19,5 +19,13 @@
   "background": {
     "scripts": ["pollApi.js","lib/sha256.js"],
     "persistent": false
-  }
+  },
+  "icons": {
+    "48": "res/icon48.png"
+  },
+  "content_scripts": [ {
+    "matches": ["http://www.google.com/*"],
+    "css": ["mystyles.css"],
+    "js": ["content_script.js"]
+  } ]
 }

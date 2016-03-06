@@ -41,7 +41,23 @@ function hashStep(input) {
   return btoaUrl(shaObj.getHash("BYTES"));
 }
 
-function updateHashChain() {
+function HashObj (wallet, hash) {
+  this.wallet = wallet;
+  this.hash = hash;
+}
+
+function retreiveCoins(amount) {
+  chrome.storage.local.get('wallet-ids', function(item) {
+    var storedWalletIds = item['wallet-ids'];
+    chrome.storage.local.get('wallet-hashmap', function(item){
+      var storedWalletHashMap = item['wallet-hashmap'];
+      for(var i = 0; i < amount; i++) {
+        storedWalletHashMap[storedWalletIds[0]].hashes.pop();
+      }
+      chrome.storage.local.set({'wallet-hashmap':storedWalletHashMap});
+      return new HashObj(storedWalletIds[0],storedWalletIds[0].hashes[storedWalletIds[0].hashes.length-1]);
+    })
+  })
 
 }
 
@@ -100,9 +116,7 @@ function updateWallets(callback) {
             walletAmount = storedWalletAmount;
             if(newWalletAmount > walletAmount) {
               updateBadge(newWalletAmount-walletAmount, 1);
-              chrome.browserAction.setIcon({path: 'res/coffee_open.png'});
-              window.setTimeout(function(){
-               updateBadge(newWalletAmount,0);chrome.browserAction.setIcon({path:'res/coffee_closed.png'})}, 1000);
+              animateIcon(newWalletAmount);
               walletAmount = newWalletAmount;
               chrome.storage.local.set({'wallet-amount':walletAmount});
             }
@@ -117,6 +131,31 @@ function updateWallets(callback) {
     }
   });
 
+}
+
+function animateIcon(newWalletAmount) {
+window.setTimeout(function(){
+  chrome.browserAction.setIcon({path:'res/cup0.png'})}, 0);
+window.setTimeout(function(){
+  chrome.browserAction.setIcon({path:'res/cup1.png'})}, 200);
+window.setTimeout(function(){
+  chrome.browserAction.setIcon({path:'res/cup2.png'})}, 400);
+window.setTimeout(function(){
+  chrome.browserAction.setIcon({path:'res/cup3.png'})}, 600);
+window.setTimeout(function(){
+  chrome.browserAction.setIcon({path:'res/cup1.png'})}, 800);
+window.setTimeout(function(){
+  chrome.browserAction.setIcon({path:'res/cup2.png'})}, 1000);
+window.setTimeout(function(){
+  chrome.browserAction.setIcon({path:'res/cup3.png'})}, 1200);
+window.setTimeout(function(){
+  chrome.browserAction.setIcon({path:'res/cup1.png'})}, 1400);
+window.setTimeout(function(){
+  chrome.browserAction.setIcon({path:'res/cup2.png'})}, 1600);
+window.setTimeout(function(){
+  chrome.browserAction.setIcon({path:'res/cup3.png'})}, 1800);
+window.setTimeout(function() {
+   updateBadge(newWalletAmount,0);chrome.browserAction.setIcon({path:'res/cup3.png'})}, 2000);
 }
 
 function convertBadgeToString(input) {
@@ -134,7 +173,6 @@ function convertBadgeToString(input) {
 // type 0: standard
 // type 1: plus
 // type 2: minus
-// type 3: zero
 function updateBadge(updateInt,type) {
   updateText = convertBadgeToString(updateInt);
   if(type == 1) {
@@ -142,10 +180,12 @@ function updateBadge(updateInt,type) {
     updateColor = "#FFD700";
   } else if (type == 2) {
     updateColor = "#FF0000";
-  } else if (type == 3) {
-    updateColor = "#FF0000";
   } else {
-    updateColor = "#008000";
+    if(updateInt == 0) {
+      updateColor = "#FF0000";
+    } else {
+      updateColor = "#008000";
+    }
   }
   chrome.browserAction.setBadgeBackgroundColor({color: updateColor});
   chrome.browserAction.setBadgeText({text: updateText});
@@ -162,15 +202,16 @@ chrome.storage.local.get('wallet-amount', function(item){
   updateBadge(walletAmount,3)
 });
 
+// receive message from content script
+chrome.runtime.onConnect.addListener(function(port) {
+  port.onMessage.addListener(function(msg) {
+    var hashObj = retreiveCoins(msg.amount);
+    var newMsg = {id: msg.id.replace("REQ", "RESP"), wallet: hashObj.wallet, coin: hashObj.coin };
+    port.postMessage(newMsg);
+  });
+});
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
-  //var increase = 500;
   updateWallets(function(id, seed, tail) {
   console.log('id: '+id + ' seed: ' + seed + ' tail: ' + tail) });
-  //updateBadge(increase, 1);
-  //chrome.browserAction.setIcon({path: 'res/coffee_open.png'});
-  //window.setTimeout(function(){
-  //  updateBadge(walletAmount,0);chrome.browserAction.setIcon({path:'res/coffee_closed.png'})}, 1000);
-  //walletAmount = walletAmount + increase;
-  //chrome.storage.local.set({'wallet-amount':walletAmount});
 });
