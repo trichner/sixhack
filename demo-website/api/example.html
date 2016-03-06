@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="jquery-1.12.1.js"></script>
+	<script type="text/javascript" src="api.js"></script>
+	<script type="text/javascript">
+		function getCoins(amount){
+			window.TipIt.request(amount,function(n){
+				alert("Got " + n + " tips.")
+			})
+		}
+	</script>
+</head>>
+<body>
+
+<h1>My First Heading</h1>
+
+<p>My first paragraph.</p>
+
+<button onclick="getCoins(100)">Moneyyyy</button>
+
+</body>
+</html>

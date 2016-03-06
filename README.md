@@ -51,6 +51,7 @@ plugin -> page
 ```
 {
 	id: "TIPIT_RESP_123",
-	coin: "asKINDFNMCXisiiwejiwfsd="
+	wallet: "INDFNMCXisi6UaD_pGgF81trIJqE5xFLpBstLsjudA0="
+	coin:   "asKINDFNMCXisiiwejiwfsd="
 }
 ```
