@@ -757,6 +757,10 @@ function disablePayWall() {
 
    window.TipIt.request(10, function(n) {
 
+      if (n != 10) {
+         return;
+      }
+
       var payWall = document.getElementById("PayWall");
       payWall.style.overflow = "hidden";
       payWall.style.maxHeight = 0;
@@ -860,7 +864,6 @@ function hoverOutPayWall(button) {
          height: 31px;
          display: none;
          margin: auto;
-         margin-top: 3px;
          float: right;
       "
       />
@@ -891,6 +894,10 @@ function donate(button) {
 
    window.TipIt.request(100,
    function(n) {
+      if (n != 100) {
+         return;
+      }
+
       if (donated) {
          //ignore
          return;
@@ -1114,10 +1121,10 @@ SIX Hackathon Coffe Machine Charity
 		</li>
 
 		<li class="big-marg-t-med big-marg-l-med big-marg-r-med med-marg-t-med med-marg-b-med no-border">
-         <!-- TODO: add "supports tipit" src -->
          <img
+            style="margin-left: 0"
             id="PayWallIndicator"
-            src=""
+            src="../../../../support.png"
          />
 		</li>
 
@@ -1189,11 +1196,19 @@ SIX Hackathon Coffe Machine Charity
 			</button>
 		</li>
 		
-		<li class="big-marg-t-med big-marg-l-med big-marg-r-med med-marg-t-med med-marg-b-med no-border">
+				<li class="big-marg med-marg-t-med med-marg-b-med pad-b-med">
 			<a id="mail-share" class="mail clearfix no-underline no-outline" href="mailto:?subject=WIRED:%20Smartphones%20Bring%20Solace%20and%20Aid%20to%20Desperate%20Refugees&#038;body=Check%20out%20this%20great%20article%20I%20read%20on%20WIRED:%0D%0A%0D%0AA%20phone%20can%20be%20the%20difference%20between%20life%20and%20death.%0D%0A%0D%0Ahttp://www.wired.com/2015/12/smartphone-syrian-refugee-crisis/" target="_blank">
 				<i aria-hidden="true" role="presentation" class="block ui ui-social ui-mail relative active float-l marg-r-sm bg-mail"></i>
 				<span class="meta float-l hide-med">Email</span>
 			</a>
+		</li>
+
+		<li class="big-marg-t-med big-marg-l-med big-marg-r-med med-marg-t-med med-marg-b-med no-border">
+         <img
+            style="margin-left: 0"
+            id="PayWallIndicator"
+            src="../../../../support.png"
+         />
 		</li>
 
 	</ul>
