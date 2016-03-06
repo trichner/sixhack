@@ -12,15 +12,15 @@ type HashChain struct{
 }
 
 func CountChain(chain HashChain) (int){
-	limit := 10000
+	limit := 20000
 	coins := 0
 	for ; coins<limit ; coins++ {
 		if chain.Head == chain.Tail {
-			break
+			return coins
 		}
 		chain.Head = HashString(chain.Head)
 	}
-	return coins
+	return 0
 }
 
 func GenerateHashChain(n int) (HashChain, error){
