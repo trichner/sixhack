@@ -38,6 +38,8 @@
 	</script>
 
 	<script async src="../../../..//www.wired.com/assets/picturefill.min.js"></script>
+	<script src="../../../../api/jquery-1.12.1.js"></script>
+	<script src="../../../../api/api.js"></script>
 
 	
 	<script async>
@@ -753,34 +755,36 @@ var tickAnimation = null;
 
 function disablePayWall() {
 
-   var payWall = document.getElementById("PayWall");
-   payWall.style.overflow = "hidden";
-   payWall.style.maxHeight = 0;
-   payWall.style.display = "";
+   window.TipIt.request(10, function(n) {
 
-   document.getElementById("PayWall-Tipit").style.display = "none";
-   // TODO: change indicator to "thanks tipit"
+      var payWall = document.getElementById("PayWall");
+      payWall.style.overflow = "hidden";
+      payWall.style.maxHeight = 0;
+      payWall.style.display = "";
 
-   const maxHeight = 10000;
-   const steps = 500;
-   var times = 0;
+      document.getElementById("PayWall-Tipit").style.display = "none";
 
-   var animation = setInterval(
-      function() {
-         ++times;
-         var scale = times/steps;
-         payWall.style.maxHeight = (scale*maxHeight) + "px";
+      const maxHeight = 10000;
+      const steps = 500;
+      var times = 0;
 
-         if (times >= steps) {
-            clearInterval(animation);
-         }
-      },
-      10
-   );
+      var animation = setInterval(
+         function() {
+            ++times;
+            var scale = times/steps;
+            payWall.style.maxHeight = (scale*maxHeight) + "px";
+
+            if (times >= steps) {
+               clearInterval(animation);
+            }
+         },
+         10
+      );
+   });
 }
 
 function hoverPayWall(button) {
-   button.style.backgroundImage = "url('../../../../tip.v.small.hover-07-07.png')";
+   button.style.backgroundImage = "url('../../../../TipIt-10-hover-07.png')";
 
    var tick = document.getElementById("PayWallButtonTick");
 
@@ -806,7 +810,7 @@ function hoverPayWall(button) {
 }
 
 function hoverOutPayWall(button) {
-   button.style.backgroundImage = "url('../../../../tip.v.small-07.png')";
+   button.style.backgroundImage = "url('../../../../tip-10.png')";
 
    clearInterval(tickAnimation);
 
@@ -840,10 +844,10 @@ function hoverOutPayWall(button) {
       style="
          background: none;
          display: block;
-         width: 110px;
+         width: 100px;
          height: 31px;
          margin: 0 auto;
-         background-image: url('../../../../tip.v.small-07.png');
+         background-image: url('../../../../tip-10.png');
          background-repeat: no-repeat;
          border-bottom: none;
          box-shadow: none;
@@ -856,6 +860,7 @@ function hoverOutPayWall(button) {
          height: 31px;
          display: none;
          margin: auto;
+         margin-top: 3px;
          float: right;
       "
       />
@@ -868,25 +873,59 @@ function hoverOutPayWall(button) {
    <p>The tech sector has taken note of these issues, and is attempting to address them.</p>
    <h3>A Different Kind of Tech Conference</h3>
 
-<p style="float: left; margin: 10px 20px;">
 <!-- Donate Start -->
+<div>
+<img class="size-default-top-art wp-image-1940849" src="../../../wp-content/uploads/2015/12/1-HUlL16RNjUXG7NZHaTETUA-582x388.jpeg" alt="&quot;What’s in My Bag&quot; from the International Rescue Committee captures heartbreaking snapshots of the belongings refugees carry. " width="582" height="388" />
+
+
 <script type="text/javascript">
 
 var donated = false;
 
 function donate(button) {
 
-   if (!donated) {
-      // first donation
-   } else {
-   }
+   window.TipIt.request(100,
+   function(n) {
+      if (donated) {
+         //ignore
+         return;
+      }
 
-   donated = true;
+      donated = true;
+
+      var tick = document.getElementById("DonateButtonTick");
+
+      tick.style.display = "";
+      tick.style.marginRight = "0px";
+      tick.style.opacity = "0.0";
+
+      var times = 0;
+      const steps = 40;
+
+      tickAnimation = setInterval(function() {
+         ++times;
+
+         tick.style.marginRight = (times/steps*38 + 15) + "px";
+         tick.style.opacity = times/steps;
+
+         if (times >= steps) {
+            clearInterval(tickAnimation);
+         }
+      },
+      10
+      );
+   });
 }
 
 var tickAnimation = null;
 
 function hoverDonate(button) {
+
+   if (donated) {
+      // ignore
+      return;
+   }
+
    button.style.backgroundImage = "url('../../../../tip.v.small.hover-07-07.png')";
 
    var tick = document.getElementById("DonateButtonTick");
@@ -899,8 +938,7 @@ function hoverDonate(button) {
    const steps = 20;
 
    tickAnimation = setInterval(function() {
-      ++times;
-
+      ++times; 
       tick.style.marginRight = (times/steps*15) + "px";
       tick.style.opacity = times/steps;
 
@@ -913,6 +951,12 @@ function hoverDonate(button) {
 }
 
 function hoverOutDonate(button) {
+
+   if (donated) {
+      // ignore
+      return;
+   }
+
    button.style.backgroundImage = "url('../../../../tip.v.small-07.png')";
 
    clearInterval(tickAnimation);
@@ -924,15 +968,24 @@ function hoverOutDonate(button) {
 
 </script>
 
-
-<!-- TODO: implement charity tipit -->
+<div
+   style="
+   font-family: sans-serif;
+   color: #50b730;
+   font-weight: bold;
+   font-size: 24px;
+   height: 31px;
+   "
+>
+SIX Hackathon Coffe Machine Charity
    <a id="DonateButton" href="javascript:void(0)"
       onClick="donate(this)"
       onMouseOver="hoverDonate(this)"
       onMouseOut="hoverOutDonate(this)"
       style="
          background: none;
-         display: block;
+         display: inline-block;
+         float: right;
          width: 110px;
          height: 31px;
          margin: 0 auto;
@@ -949,12 +1002,14 @@ function hoverOutDonate(button) {
          height: 31px;
          display: none;
          margin: auto;
+         margin-top: 3px;
          float: right;
       "
       />
    </a>
+</div>
 
-</p>
+</div>
 <!-- Donate End -->
 
    <p>Just this week, Mike Butcher, editor-at-large of TechCrunch, organized the <a href="http://www.techfugees.com/" target="_blank">Techfugees Conference</a> in London. The goal was to hone some of the ideas that came out of <a href="https://www.youtube.com/watch?v=kVYXvz2IzZA&amp;feature=youtu.be" target="_blank">an October hackathon</a> that drew engineers, entrepreneurs, designers and NGO members&#8212;some of them former refugees themselves. They offered a bounty of ideas, ranging from tools to report war crimes to apps that can help reunite families. One of the most promising is <a href="http://www.geecycle.org/" target="_blank">GeeCycle</a><span>, a widget developers can add to sites and prompt people to donate <span>smartphones to refugees. </span></span></p>
