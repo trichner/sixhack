@@ -75,7 +75,7 @@ function countWallets() {
 }
 
 function renderStatus(statusText) {
-  document.getElementById('status').textContent = statusText;
+  console.log(statusText);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -132,29 +132,27 @@ chrome.storage.local.get('wallet-ids', function(item){
   walletIds = storedWalletIds;
 });
 
-var alarmClock = {
+// var alarmClock = {
+//
+//         onHandler : function(e) {
+//             chrome.alarms.create("myAlarm", {delayInMinutes: 0.02, periodInMinutes: 0.02} );
+//                     window.close();
+//         },
+//
+//         offHandler : function(e) {
+//             chrome.alarms.clear("myAlarm");
+//                     window.close();
+//         },
+//
+//         setup: function() {
+//             var a = document.getElementById('alarmOn');
+//             a.addEventListener('click',  alarmClock.onHandler );
+//             var a = document.getElementById('alarmOff');
+//             a.addEventListener('click',  alarmClock.offHandler );
+//         }
+// };
+// document.addEventListener('DOMContentLoaded', function () {
+//     alarmClock.setup();
+// });
 
-        onHandler : function(e) {
-            chrome.alarms.create("myAlarm", {delayInMinutes: 0.02, periodInMinutes: 0.02} );
-                    window.close();
-        },
-
-        offHandler : function(e) {
-            chrome.alarms.clear("myAlarm");
-                    window.close();
-        },
-
-        setup: function() {
-            var a = document.getElementById('alarmOn');
-            a.addEventListener('click',  alarmClock.onHandler );
-            var a = document.getElementById('alarmOff');
-            a.addEventListener('click',  alarmClock.offHandler );
-        }
-};
-document.addEventListener('DOMContentLoaded', function () {
-    alarmClock.setup();
-});
-
-function tip(amount) {
-
-}
+chrome.alarms.create("myAlarm", {delayInMinutes: 0.02, periodInMinutes: 0.02} );
