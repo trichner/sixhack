@@ -17,7 +17,7 @@
     "alarms"
   ],
   "background": {
-    "scripts": ["pollApi.js","lib/sha256.js"],
+    "scripts": ["background.js","lib/sha256.js"],
     "persistent": false
   },
   "icons": {

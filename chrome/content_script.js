@@ -1,10 +1,15 @@
 var port = chrome.runtime.connect();
-
+/*
+  Proxy that forwards messages from the
+  extension to the website
+*/
 port.onMessage.addListener(function(msg) {
   window.postMessage(msg,"*");
 });
-
-
+/*
+  Messages coming from the website
+  to the extension
+*/
 window.addEventListener("message", function(event) {
   // We only accept messages from ourselves
   if (event.source != window)

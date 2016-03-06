@@ -1,24 +1,41 @@
+/*
+  TipIt Chrome Extension
+  Done for SixHackathon 2016
+  Author: Marcel Mohler
+  Background Code
+*/
+/*
+  Global variables
+*/
 var qrUrl = 'https://api.qrserver.com/v1/create-qr-code';
 var qrParam = '?size=150x150&data=';
 var serverUrl = 'https://n1b.ch:7443/wallet/';
-
+/*
+  Wrapper around btoa that makes it URL friendly
+*/
 function btoaUrl(string) {
   return window.btoa(string).replace(/\+/g,'-').replace(/\//g,'_');
 }
-
+/*
+  Class that holds information about a wallet
+*/
 function Wallet (id, seed, tail) {
   this.id = id;
   this.seed = seed;
   this.tail = tail;
   this.hashes = [];
 }
-
+/*
+  Helper class to generate a new Wallet
+*/
 Wallet.generateWallet = function(id, seed, tail) {
   var wallet = new Wallet(id, seed, tail);
   wallet.hashes = generateHashes(seed, tail);
   return wallet;
 }
-
+/*
+  Generates all hashes between head and tail
+*/
 function generateHashes(head, tail) {
   var hashes = [];
   var limit = 20000;
@@ -34,13 +51,17 @@ function generateHashes(head, tail) {
   console.log(hashes.length);
   return hashes;
 }
-
+/*
+  One single SHA256 step
+*/
 function hashStep(input) {
   var shaObj = new jsSHA("SHA-256", "TEXT", {encoding:"UTF8"});
   shaObj.update(input);
   return btoaUrl(shaObj.getHash("BYTES"));
 }
-
+/*
+  Retreives coins from the latest wallet
+*/
 function retreiveCoins(amount,callback) {
   chrome.storage.local.get('wallet-hashmap', function(item){
     var walletHashMap = item['wallet-hashmap'];
@@ -62,9 +83,10 @@ function retreiveCoins(amount,callback) {
             hash: poppedElement
       });
     })
-
 }
-
+/*
+  Core functionality that updates the wallets
+*/
 function updateWallets(callback) {
   var walletIds = [];
   chrome.storage.local.get('wallet-ids', function(item){
@@ -78,14 +100,14 @@ function updateWallets(callback) {
     for(var i = 0; i < walletIds.length; i++) {
       var x = new XMLHttpRequest();
       x.open('GET', serverUrl + walletIds[i]);
-      console.log('Checking...' + serverUrl+walletIds[i]);
+      //console.log('Checking...' + serverUrl+walletIds[i]);
       x.responseType = 'json';
       x.onload = function() {
         // Parse and process the response
         var response = x.response;
         if (x.status == 404 || !response || !response.seed || !response.tail ||
             !response.id) {
-          console.log("No wallet with this id");
+          //console.log("No wallet with this id");
           return;
         }
         var seed = response.seed;
@@ -143,6 +165,9 @@ function updateWallets(callback) {
 
 }
 
+/*
+  Very hacky approach to make the icon animated
+*/
 function animateIcon(newWalletAmount) {
 window.setTimeout(function(){
   chrome.browserAction.setIcon({path:'res/cup0.png'})}, 0);
@@ -167,7 +192,9 @@ window.setTimeout(function(){
 window.setTimeout(function() {
    updateBadge(newWalletAmount,0);chrome.browserAction.setIcon({path:'res/cup3.png'})}, 2000);
 }
-
+/*
+  Converts the badge number to be display friendly
+*/
 function convertBadgeToString(input) {
   // this converts a number in a readable badge
   // numbers below 1000 get displayed as is
@@ -180,11 +207,14 @@ function convertBadgeToString(input) {
     return (parseInt(input/1000)+'k');
   }
 }
-
-// type is an int with 3 values:
-// type 0: standard
-// type 1: plus
-// type 2: minus
+/*
+  Updates the badge in one of the 3 following
+  ways
+  type is an int with 3 values:
+  type 0: standard
+  type 1: plus
+  type 2: minus
+*/
 function updateBadge(updateInt,type) {
   updateText = convertBadgeToString(updateInt);
   if(type == 1) {
@@ -202,7 +232,9 @@ function updateBadge(updateInt,type) {
   chrome.browserAction.setBadgeBackgroundColor({color: updateColor});
   chrome.browserAction.setBadgeText({text: updateText});
 }
-
+/*
+  makes sure wallet-amount has a reference
+*/
 var walletAmount = null;
 chrome.storage.local.get('wallet-amount', function(item){
   var storedWalletAmount = item['wallet-amount'];
@@ -214,7 +246,9 @@ chrome.storage.local.get('wallet-amount', function(item){
   updateBadge(walletAmount,3)
 });
 
-// receive message from content script
+/*
+ receive message from content script
+*/
 chrome.runtime.onConnect.addListener(function(port) {
   port.onMessage.addListener(function(msg) {
     retreiveCoins(msg.amount, function(hashObj) {
@@ -223,7 +257,9 @@ chrome.runtime.onConnect.addListener(function(port) {
     });
   });
 });
-
+/*
+  Listener for reoccuring 'alarm'
+*/
 chrome.alarms.onAlarm.addListener(function(alarm) {
   updateWallets(function(id, seed, tail) {
   console.log('id: '+id + ' seed: ' + seed + ' tail: ' + tail) });
