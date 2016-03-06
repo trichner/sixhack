@@ -13,7 +13,7 @@ func main() {
 
 	flag.StringVar(&head,"head","","head of the chain")
 	flag.StringVar(&tail,"tail","","tail of the chain")
-	flag.IntVar(&limit,"limit",100,"limit of strings")
+	flag.IntVar(&limit,"limit",10000,"limit of strings")
 	flag.Parse()
 
 	coins := 0
